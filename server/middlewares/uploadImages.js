@@ -3,8 +3,7 @@ import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 
-const paths =
-  "C:UsersUserOneDriveDesktopMern Stack Projectserverpublicimagesproducts";
+const paths = "../public/images/products/";
 
 if (fs.existsSync(paths)) {
   console.log("File exists");
