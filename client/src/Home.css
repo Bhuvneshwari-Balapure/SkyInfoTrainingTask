@@ -1,0 +1,56 @@
+.main-banner-content {
+  top: 20%;
+  left: 10%;
+  z-index: 2;
+  color: #000;
+  max-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .main-banner-content {
+    top: 10%;
+    left: 5%;
+    max-width: 90%;
+  }
+}
+
+/* Optional: Image Hover Zoom */
+.main-banner img,
+.right-tile img {
+  transition: transform 0.3s ease;
+}
+
+.main-banner:hover img,
+.right-tile:hover img {
+  transform: scale(1.02);
+}
+
+/* Tile Box Styling */
+.right-tile {
+  padding: 1rem;
+  border-radius: 12px;
+  height: 100%;
+  position: relative;
+}
+
+.right-tile h5 {
+  font-weight: 600;
+}
+
+.right-tile small {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Tile Image Size */
+.right-tile img {
+  max-width: 100%;
+  max-height: 100px;
+  object-fit: contain;
+}
+.small-img {
+  height: 80px !important;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}

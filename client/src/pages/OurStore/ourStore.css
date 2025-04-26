@@ -1,0 +1,199 @@
+/* 
+.store-wrapper {
+  background-color: rgb(218, 217, 217) !important;
+}
+.filter-card {
+  background-color: white !important;
+  border-radius: 10px !important;
+  padding: 10px 15px !important;
+}
+.filter-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-1c1c1b);
+}
+.sub-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-1c1c1b);
+  margin-bottom: 15px;
+}
+.sortBy {
+  width: 100% !important;
+  background-color: white !important;
+}
+.Price {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.color-swatch:hover {
+  transform: scale(1.1);
+  border: 2px solid #000;
+  transition: transform 0.2s ease;
+}
+
+.product-tag {
+  background-color: #f1f1f1;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-tag:hover {
+  background-color: #ddd;
+}
+.sortBy svg {
+  font-size: 1.2rem;
+  color: #333;
+  transition: transform 0.2s ease;
+}
+
+.sortBy svg:hover {
+  transform: scale(1.1);
+  color: #000;
+}
+
+.icon-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.bar {
+  height: 20px;
+  background-color: black;
+  border-radius: 2px;
+}
+
+.bar.small {
+  width: 3px;
+}
+
+.bar.medium {
+  width: 5px;
+}
+
+.bar.wide {
+  width: 8px;
+}
+
+.layout-icon.active .bar {
+  background-color: blue;
+} */
+
+.store-wrapper {
+  background-color: rgb(218, 217, 217) !important;
+}
+
+/* Sidebar Filter Cards */
+.filter-card {
+  background-color: white !important;
+  border-radius: 10px !important;
+  padding: 10px 15px !important;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-1c1c1b);
+}
+
+.sub-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-1c1c1b);
+  margin-bottom: 15px;
+}
+
+/* Product Price Filter Layout */
+.Price {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+/* Color Swatches */
+.color-swatch {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  border: 2px solid #000;
+}
+
+/* Product Tags */
+.product-tag {
+  background-color: #f1f1f1;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-tag:hover {
+  background-color: #ddd;
+}
+
+/* Sorting Dropdown */
+.sortBy {
+  width: 100% !important;
+  background-color: white !important;
+}
+
+/* Sort Icon Styling */
+.sortBy svg {
+  font-size: 1.2rem;
+  color: #333;
+  transition: transform 0.2s ease;
+}
+
+.sortBy svg:hover {
+  transform: scale(1.1);
+  color: #000;
+}
+
+/* Layout Toggle View */
+.icon-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.bar {
+  height: 20px;
+  background-color: black;
+  border-radius: 2px;
+}
+
+.bar.small {
+  width: 3px;
+}
+
+.bar.medium {
+  width: 5px;
+}
+
+.bar.wide {
+  width: 8px;
+}
+
+.layout-icon.active .bar {
+  background-color: blue;
+}
