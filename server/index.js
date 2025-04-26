@@ -45,7 +45,7 @@ app.use("/api/enq", enqRoute);
 app.use("/api/category", CategoryRoute); //Product Category
 
 // Serve static files
-// app.use("/Images", express.static("Images"));
+app.use("/public", express.static("public"));
 
 // Error handling middleware
 app.use(notFound);
