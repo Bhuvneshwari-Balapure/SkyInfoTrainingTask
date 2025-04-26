@@ -46,6 +46,7 @@ app.use("/api/category", CategoryRoute); //Product Category
 
 // Serve static files
 app.use("/images", express.static("images"));
+app.use("/public", express.static("public"));
 
 // Error handling middleware
 app.use(notFound);

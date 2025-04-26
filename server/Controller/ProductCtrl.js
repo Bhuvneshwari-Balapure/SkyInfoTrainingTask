@@ -203,37 +203,29 @@ const rating = asyncHandler(async (req, res) => {
 });
 const uploadImages = asyncHandler(async (req, res) => {
   try {
-    const uploader = (path) => cloudinaryUploadingImg(path, "images");
-    const urls = [];
-    const files = req.files;
+    
+    const images = req.body.images || [];
 
-    if (!files || files.length === 0) {
-      return res.status(400).json({ message: "No files uploaded" });
+    if (!images || images.length === 0) {
+      return res.status(400).json({ message: "No images uploaded" });
     }
 
-    for (const file of files) {
-      const { path } = file;
+    const formattedImages = images.map((image) => ({
+      url: image.url,
+      public_id: image.public_id,
+      asset_id: image.asset_id,
+    }));
 
-      // Cloudinary upload
-      const newPath = await uploader(path);
-      console.log(newPath, "Files");
-      urls.push(newPath);
-
-      // Delete file after upload
-      fs.unlink(path, (err) => {
-        if (err) {
-          console.error(`Error deleting file ${path}:`, err);
-        }
-      });
-    }
-
-    // Return image URLs
-    res.json(urls);
+    res.json({
+      message: "Images uploaded successfully",
+      images: formattedImages,
+    });
   } catch (error) {
-    console.error("Error in uploading images:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to upload images", error: error.message });
+    console.error("Error in uploadImages:", error);
+    res.status(500).json({
+      message: "Failed to upload images",
+      error: error.message,
+    });
   }
 });
 

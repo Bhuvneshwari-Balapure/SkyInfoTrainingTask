@@ -9,9 +9,15 @@ router.put("/wishlist", authMiddleware, ProductCtrl.addToWishList);
 router.post("/createProduct", ProductCtrl.CreateProduct);
 router.put(
   "/upload",
-  authMiddleware,
-  isAdmin,
+  // authMiddleware,
+  // isAdmin,
   uploadPhoto.array("images", 10),
+  (req, res, next) => {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+    next();
+  },
   productImgResize,
   ProductCtrl.uploadImages
 );
