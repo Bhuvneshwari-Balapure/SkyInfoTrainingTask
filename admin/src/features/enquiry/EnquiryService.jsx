@@ -1,6 +1,6 @@
 import axios from "axios";
-import { config } from "../../utils/axiosconfig";
-import { base_url } from "../../utils/baseUrl";
+import { config } from "../../Config/AxiosConfig";
+import { base_url } from "../../Config/BaseUrl";
 const getEnquiries = async () => {
   const response = await axios.get(`${base_url}enquiry/`);
 

@@ -203,7 +203,6 @@ const rating = asyncHandler(async (req, res) => {
 });
 const uploadImages = asyncHandler(async (req, res) => {
   try {
-    
     const images = req.body.images || [];
 
     if (!images || images.length === 0) {
@@ -239,6 +238,7 @@ const deleteUploadImages = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
 export {
   CreateProduct,
   GetProduct,

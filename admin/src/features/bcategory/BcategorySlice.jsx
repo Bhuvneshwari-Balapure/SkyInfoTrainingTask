@@ -1,29 +1,25 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import BCategoryService from "./BcategoryService";
+import BCategoryService from "./BcategoryService"; // Corrected capitalization of the import
 
-// Thunks
+// Async Thunks for handling blog category actions
 export const getCategories = createAsyncThunk(
   "blogCategory/get-categories",
-  async (_, thunkAPI) => {
+  async (thunkAPI) => {
     try {
       return await BCategoryService.getBlogCategories();
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.message || "Fetch categories failed"
-      );
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const createNewblogCat = createAsyncThunk(
+export const createNewBlogCat = createAsyncThunk(
   "blogCategory/create-category",
   async (catData, thunkAPI) => {
     try {
       return await BCategoryService.createBlogCategory(catData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.message || "Create category failed"
-      );
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -34,7 +30,7 @@ export const getABlogCat = createAsyncThunk(
     try {
       return await BCategoryService.getBlogCategory(id);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message || "Get category failed");
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -45,9 +41,7 @@ export const updateABlogCat = createAsyncThunk(
     try {
       return await BCategoryService.updateBlogCategory(blogCat);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.message || "Update category failed"
-      );
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -58,17 +52,15 @@ export const deleteABlogCat = createAsyncThunk(
     try {
       return await BCategoryService.deleteBlogCategory(id);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.message || "Delete category failed"
-      );
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-// Reset
+// Action to reset the state
 export const resetState = createAction("Reset_all");
 
-// Initial state
+// Initial state for the blog category slice
 const initialState = {
   bCategories: [],
   isError: false,
@@ -77,14 +69,13 @@ const initialState = {
   message: "",
 };
 
-// Slice
-export const PCategorySlice = createSlice({
-  name: "bCategories",
+// Create slice for blog categories
+export const BCategorySlice = createSlice({
+  name: "bCategories", // Proper naming convention for slice
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Get categories
       .addCase(getCategories.pending, (state) => {
         state.isLoading = true;
       })
@@ -97,26 +88,24 @@ export const PCategorySlice = createSlice({
       .addCase(getCategories.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload || action.error.message;
+        state.isSuccess = false;
+        state.message = action.error;
       })
-
-      // Create
-      .addCase(createNewblogCat.pending, (state) => {
+      .addCase(createNewBlogCat.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createNewblogCat.fulfilled, (state, action) => {
+      .addCase(createNewBlogCat.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
         state.createBlogCategory = action.payload;
       })
-      .addCase(createNewblogCat.rejected, (state, action) => {
+      .addCase(createNewBlogCat.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload || action.error.message;
+        state.isSuccess = false;
+        state.message = action.error;
       })
-
-      // Get single
       .addCase(getABlogCat.pending, (state) => {
         state.isLoading = true;
       })
@@ -129,10 +118,9 @@ export const PCategorySlice = createSlice({
       .addCase(getABlogCat.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload || action.error.message;
+        state.isSuccess = false;
+        state.message = action.error;
       })
-
-      // Update
       .addCase(updateABlogCat.pending, (state) => {
         state.isLoading = true;
       })
@@ -145,10 +133,9 @@ export const PCategorySlice = createSlice({
       .addCase(updateABlogCat.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload || action.error.message;
+        state.isSuccess = false;
+        state.message = action.error;
       })
-
-      // Delete
       .addCase(deleteABlogCat.pending, (state) => {
         state.isLoading = true;
       })
@@ -161,12 +148,11 @@ export const PCategorySlice = createSlice({
       .addCase(deleteABlogCat.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload || action.error.message;
+        state.isSuccess = false;
+        state.message = action.error;
       })
-
-      // Reset
       .addCase(resetState, () => initialState);
   },
 });
 
-export default PCategorySlice.reducer;
+export default BCategorySlice.reducer;
