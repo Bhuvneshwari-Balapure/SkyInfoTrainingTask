@@ -48,6 +48,7 @@ const Brandlist = () => {
 
   // Get brand state from Redux store
   const brandState = useSelector((state) => state.brand.brands);
+  console.log("Brand State from brand list", brandState);
 
   // Fetch brands when component mounts (on load)
   useEffect(() => {
@@ -56,23 +57,43 @@ const Brandlist = () => {
   }, [dispatch]); // Adding `dispatch` to dependency array to be safe
 
   // Prepare data for table
-  const data1 = brandState.map((brand, index) => ({
-    key: index + 1,
-    name: brand.title,
-    action: (
-      <>
-        <Link to={`/admin/brand/${brand._id}`} className="fs-3 text-danger">
-          <BiEdit />
-        </Link>
-        <button
-          className="ms-3 fs-3 text-danger bg-transparent border-0"
-          onClick={() => showModal(brand._id)}
-        >
-          <AiFillDelete />
-        </button>
-      </>
-    ),
-  }));
+  // const data1 = brandState.map((brand, index) => ({
+  //   key: index + 1,
+  //   name: brand.title,
+  //   action: (
+  //     <>
+  //       <Link to={`/admin/brand/${brand._id}`} className="fs-3 text-danger">
+  //         <BiEdit />
+  //       </Link>
+  //       <button
+  //         className="ms-3 fs-3 text-danger bg-transparent border-0"
+  //         onClick={() => showModal(brand._id)}
+  //       >
+  //         <AiFillDelete />
+  //       </button>
+  //     </>
+  //   ),
+  // }));
+
+  const data1 = Array.isArray(brandState?.brand)
+    ? brandState.brand.map((brand, index) => ({
+        key: index + 1,
+        name: brand.title,
+        action: (
+          <>
+            <Link to={`/admin/brand/${brand._id}`} className="fs-3 text-danger">
+              <BiEdit />
+            </Link>
+            <button
+              className="ms-3 fs-3 text-danger bg-transparent border-0"
+              onClick={() => showModal(brand._id)}
+            >
+              <AiFillDelete />
+            </button>
+          </>
+        ),
+      }))
+    : [];
 
   // Delete brand handler
   const deleteBrand = (e) => {

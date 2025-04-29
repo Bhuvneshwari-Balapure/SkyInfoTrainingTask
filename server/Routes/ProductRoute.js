@@ -22,8 +22,8 @@ router.put(
   ProductCtrl.uploadImages
 );
 router.put("/rating", authMiddleware, ProductCtrl.rating);
-router.get("/", ProductCtrl.GetAllProducts);
-router.get("/:id", ProductCtrl.GetProduct);
+router.get("/get", ProductCtrl.GetAllProducts);
+router.get("/get:id", ProductCtrl.GetProduct);
 router.put("/:id", authMiddleware, isAdmin, ProductCtrl.UpdateProducts);
 router.delete("/:id", authMiddleware, isAdmin, ProductCtrl.DeleteProduct);
 

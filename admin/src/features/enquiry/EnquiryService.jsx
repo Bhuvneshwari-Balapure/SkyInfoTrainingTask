@@ -2,9 +2,15 @@ import axios from "axios";
 import { config } from "../../Config/AxiosConfig";
 import { base_url } from "../../Config/BaseUrl";
 const getEnquiries = async () => {
-  const response = await axios.get(`${base_url}enquiry/`);
+  try {
+    const response = await axios.get(`${base_url}enq/get-allEnq`);
+    console.log("Get Enquiries from enquiry service", response.data);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching enquiries:", error);
+    throw error;
+  }
 };
 const deleteEnquiry = async (id) => {
   const response = await axios.delete(`${base_url}enquiry/${id}`, config);

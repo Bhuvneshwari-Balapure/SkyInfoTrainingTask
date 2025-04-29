@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../Models/UserModel.js";
+// import config from "../confilg/env.config.js"; // Assuming your config file is correct
 const authMiddleware = asyncHandler(async (req, res, next) => {
   let token;
   if (req?.headers?.authorization?.startsWith("Bearer")) {
@@ -8,7 +9,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     try {
       if (token) {
         console.log(token);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const decoded = jwt.verify(token, "MYsecret");
         console.log(decoded);
         const user = await User.findById(decoded?.id);
         req.user = user;

@@ -18,7 +18,7 @@ router.post("/create", authMiddleware, isAdmin, createBlog);
 
 router.put("/likes", authMiddleware, likeBlog);
 
-router.get("/get-all", getAllBlog);
+router.get("/get-all-blog", getAllBlog);
 
 router.put("/dislikes", authMiddleware, disLikeBlog);
 
@@ -33,7 +33,7 @@ router.put("/dislikes", authMiddleware, disLikeBlog);
 
 router.put("/update/:id", authMiddleware, isAdmin, updateBlog);
 
-router.get("/:id", getBlog);
+router.get("/get-blog/:id", getBlog);
 
 router.delete("/delete/:id", authMiddleware, isAdmin, deleteBlog);
 

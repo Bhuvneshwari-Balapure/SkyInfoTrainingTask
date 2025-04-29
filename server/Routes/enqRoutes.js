@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, isAdmin, createEnq);
 
-router.get("/get-category", getAllEnq);
+router.get("/get-allEnq", getAllEnq);
 
 router.get("/:id", getEnq);
 

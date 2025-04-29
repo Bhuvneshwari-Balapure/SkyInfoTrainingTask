@@ -59,7 +59,10 @@ const Addproduct = () => {
     }
   }, [isSuccess, isError, isLoading, createdProduct, navigate]); // Add 'navigate' and 'createdProduct' to the dependency array
 
-  const coloropt = colorState.map((i) => ({ label: i.title, value: i._id }));
+  // const coloropt = colorState.map((i) => ({ label: i.title, value: i._id }));
+  const coloropt = Array.isArray(colorState)
+    ? colorState.map((i) => ({ label: i.title, value: i._id }))
+    : [];
 
   const img = imgState.map((i) => ({ public_id: i.public_id, url: i.url }));
 

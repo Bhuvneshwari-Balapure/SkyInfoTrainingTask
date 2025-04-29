@@ -49,28 +49,55 @@ const Categorylist = () => {
   }, [dispatch]); // Dispatch is now a dependency of useEffect
 
   const pCatStat = useSelector((state) => state.pCategory.pCategories);
+  // const pCatStat = useSelector(
+  //   (state) => state.pCategory.pCategories?.category || []
+  // );
+
+  console.log("Product Category State from category list", pCatStat);
 
   // Use a state to build the data structure
-  const data1 = pCatStat.map((category, index) => ({
-    key: index + 1,
-    name: category.title,
-    action: (
-      <>
-        <Link
-          to={`/admin/category/${category._id}`}
-          className=" fs-3 text-danger"
-        >
-          <BiEdit />
-        </Link>
-        <button
-          className="ms-3 fs-3 text-danger bg-transparent border-0"
-          onClick={() => showModal(category._id)}
-        >
-          <AiFillDelete />
-        </button>
-      </>
-    ),
-  }));
+  // const data1 = pCatStat.map((category, index) => ({
+  //   key: index + 1,
+  //   name: category.title,
+  //   action: (
+  //     <>
+  //       <Link
+  //         to={`/admin/category/${category._id}`}
+  //         className=" fs-3 text-danger"
+  //       >
+  //         <BiEdit />
+  //       </Link>
+  //       <button
+  //         className="ms-3 fs-3 text-danger bg-transparent border-0"
+  //         onClick={() => showModal(category._id)}
+  //       >
+  //         <AiFillDelete />
+  //       </button>
+  //     </>
+  //   ),
+  // }));
+  const data1 = Array.isArray(pCatStat?.category)
+    ? pCatStat.category.map((category, index) => ({
+        key: index + 1,
+        name: category.title,
+        action: (
+          <>
+            <Link
+              to={`/admin/category/${category._id}`}
+              className=" fs-3 text-danger"
+            >
+              <BiEdit />
+            </Link>
+            <button
+              className="ms-3 fs-3 text-danger bg-transparent border-0"
+              onClick={() => showModal(category._id)}
+            >
+              <AiFillDelete />
+            </button>
+          </>
+        ),
+      }))
+    : [];
 
   // Function to delete the category
   const deleteCategory = (id) => {

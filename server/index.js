@@ -23,7 +23,12 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow your frontend
+    credentials: true, // Allow cookies and credentials
+  })
+);
 DBConnection();
 
 // Middlewares

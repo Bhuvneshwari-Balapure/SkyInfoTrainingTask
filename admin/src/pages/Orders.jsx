@@ -42,6 +42,7 @@ const Orders = () => {
   }, [dispatch]); // Adding dispatch as a dependency
 
   const orderState = useSelector((state) => state.auth.orders);
+  console.log("Order State from orders", orderState);
 
   // Generate data from orderState only after it's loaded
   const data1 = orderState.map((order, index) => ({

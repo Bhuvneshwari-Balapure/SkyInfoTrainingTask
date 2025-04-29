@@ -47,29 +47,59 @@ const Bloglist = () => {
     dispatch(getBlogs());
   }, [dispatch]);
 
-  const getBlogState = useSelector((state) => state.blogs.blogs);
+  // const getBlogState = useSelector((state) => state.blogs.blogs);
+  const getBlogState = useSelector((state) => state.blogs.blogs.getAllBlog);
+
+  console.log("Blog State from blog list", getBlogState);
 
   // Update data1 when getBlogState changes
+  // useEffect(() => {
+  //   const updatedData = getBlogState.map((blog, index) => ({
+  //     key: index + 1,
+  //     name: blog.title,
+  //     category: blog.category,
+  //     action: (
+  //       <>
+  //         <Link to={`/admin/blog/${blog.id}`} className="fs-3 text-danger">
+  //           <BiEdit />
+  //         </Link>
+  //         <button
+  //           className="ms-3 fs-3 text-danger bg-transparent border-0"
+  //           onClick={() => showModal(blog._id)}
+  //         >
+  //           <AiFillDelete />
+  //         </button>
+  //       </>
+  //     ),
+  //   }));
+  //   setData1(updatedData); // Set the data for the table
+  // }, [getBlogState]); // Runs every time getBlogState changes
+
   useEffect(() => {
-    const updatedData = getBlogState.map((blog, index) => ({
-      key: index + 1,
-      name: blog.title,
-      category: blog.category,
-      action: (
-        <>
-          <Link to={`/admin/blog/${blog.id}`} className="fs-3 text-danger">
-            <BiEdit />
-          </Link>
-          <button
-            className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(blog._id)}
-          >
-            <AiFillDelete />
-          </button>
-        </>
-      ),
-    }));
-    setData1(updatedData); // Set the data for the table
+    // Check if getBlogState is not empty and is an array
+    if (Array.isArray(getBlogState) && getBlogState.length > 0) {
+      const updatedData = getBlogState.map((blog, index) => ({
+        key: index + 1,
+        name: blog.title,
+        category: blog.category,
+        action: (
+          <>
+            <Link to={`/admin/blog/${blog.id}`} className="fs-3 text-danger">
+              <BiEdit />
+            </Link>
+            <button
+              className="ms-3 fs-3 text-danger bg-transparent border-0"
+              onClick={() => showModal(blog._id)}
+            >
+              <AiFillDelete />
+            </button>
+          </>
+        ),
+      }));
+      setData1(updatedData); // Set the data for the table
+    } else {
+      setData1([]); // If no data available, set the table data to empty array
+    }
   }, [getBlogState]); // Runs every time getBlogState changes
 
   const deleteBlog = (e) => {

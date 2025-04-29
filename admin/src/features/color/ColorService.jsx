@@ -3,8 +3,8 @@ import { config } from "../../Config/AxiosConfig";
 import { base_url } from "../../Config/BaseUrl";
 
 const getColors = async () => {
-  const response = await axios.get(`${base_url}color/`);
-
+  const response = await axios.get(`${base_url}color/get-color`);
+  console.log("Color List", response.data);
   return response.data;
 };
 const createColor = async (color) => {

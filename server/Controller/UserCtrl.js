@@ -7,6 +7,11 @@ import validateMongodbId from "../utils/validateMongodbId.js";
 import jwt from "jsonwebtoken";
 import sendEmail from "./emailCtrl.js";
 import crypto from "crypto";
+import Product from "../Models/ProductModel.js";
+import Order from "../Models/orderModel.js";
+import uniqid from "uniqid";
+import mongoose from "mongoose";
+import Coupon from "../Models/couponModel.js";
 
 const createUser = asyncHandler(async (req, res) => {
   const email = req.body.email;
@@ -117,6 +122,10 @@ const getSingleUser = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
     validateMongodbId(id);
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error("Invalid MongoDB ObjectId format.");
+    }
 
     const getUser = await User.findById(id);
     res.json(getUser);
@@ -273,7 +282,7 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
     throw new Error("Invalid credentials Not Authorized");
   }
 
-  const isMatch = await existingUser.comparePassword(password);
+  const isMatch = await existingUser.isPasswordMatched(password);
   if (!isMatch) {
     throw new Error("Invalid credentials");
   }
@@ -295,34 +304,46 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
     })
     .json({ message: "Login successful", accessToken, user: existingUser });
 });
+
 const userCart = asyncHandler(async (req, res) => {
   const { cart } = req.body;
+  const { _id } = req.user; // Make sure you are using authMiddleware if you expect req.user
+
+  validateMongodbId(_id);
+
   try {
     let products = [];
-    const user = await User.findById(req.user._id);
-    // check if user already have product in cart
+    const user = await User.findById(_id);
 
     const alreadyExistCart = await Cart.findOne({ orderby: user._id });
     if (alreadyExistCart) {
       alreadyExistCart.remove();
     }
+
     for (let i = 0; i < cart.length; i++) {
       let object = {};
-      object.product = cart[i]._id;
+      object.product = cart[i].id; // ✅ here use 'id' instead of '_id'
       object.count = cart[i].count;
       object.color = cart[i].color;
-      let getPrice = await Product.fidById(cart[i]._id).select("price").exec();
+
+      const getPrice = await Product.findById(cart[i].id)
+        .select("price")
+        .exec();
       object.price = getPrice.price;
+
       products.push(object);
     }
 
     let cartTotal = 0;
-
     for (let i = 0; i < products.length; i++) {
-      cartTotal = cartTotal + products[i].price * products[i].count;
+      cartTotal += products[i].price * products[i].count;
     }
 
-    let newCart = new Cart({ products, cartTotal, orderby: user?._id }).save();
+    const newCart = await Cart.create({
+      products,
+      cartTotal,
+      orderby: user._id,
+    });
 
     res.json(newCart);
   } catch (error) {
@@ -347,7 +368,9 @@ const emptyCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   try {
     const user = await User.findOne({ _id });
-    const cart = await Card.findOneAndRemove({ orderby: user._id });
+    // const cart = await Cart.findOneAndRemove({ orderby: user._id });
+    const cart = await Cart.findOneAndRemove({ orderby: user._id });
+
     if (!user || !cart) {
       throw new Error(" not found");
     }
@@ -358,6 +381,7 @@ const emptyCart = asyncHandler(async (req, res) => {
 });
 const applyCoupon = asyncHandler(async (req, res) => {
   const { coupon } = req.body;
+  const { _id } = req.user;
   try {
     const validCoupon = await Coupon.findOne({ name: coupon });
     if (validCoupon === null) {
@@ -404,6 +428,8 @@ const createOrder = asyncHandler(async (req, res) => {
       finalAmount = userCart.cartTotal;
     }
 
+    // Now save the order with correct value
+
     let newOrder = new Order({
       product: userCart.Products,
       paymentIntent: {
@@ -438,11 +464,15 @@ const createOrder = asyncHandler(async (req, res) => {
 const getOrders = asyncHandler(async (req, res) => {
   try {
     const { _id } = req.user;
+    console.log("MongoDB Id : ", _id);
     validateMongodbId(_id);
 
-    const userOrders = await Order.findOne({ orderby: _id }).populate(
-      "Products.products"
-    );
+    const userOrders = await Order.findOne({ orderby: _id })
+      .populate(
+        // "Products.products"
+        "products.product"
+      )
+      .exec();
     res.json(userOrders);
   } catch (error) {
     throw new Error(error);

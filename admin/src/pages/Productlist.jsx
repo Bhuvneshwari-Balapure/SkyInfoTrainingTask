@@ -51,27 +51,50 @@ const Productlist = () => {
   }, [dispatch]); // Added dispatch in dependency array to ensure it triggers correctly
 
   // Get the list of products from Redux state
+  // const productState = useSelector((state) => state.product.products);
   const productState = useSelector((state) => state.product.products);
+  console.log("Product State from product list", productState);
 
   // Prepare data for Table component (mapping product state)
-  const data1 = productState.map((product, index) => ({
-    key: index + 1,
-    title: product.title,
-    brand: product.brand,
-    category: product.category,
-    color: product.color,
-    price: `${product.price}`,
-    action: (
-      <>
-        <Link to="/" className="fs-3 text-danger">
-          <BiEdit />
-        </Link>
-        <Link className="ms-3 fs-3 text-danger" to="/">
-          <AiFillDelete />
-        </Link>
-      </>
-    ),
-  }));
+  // const data1 = productState.map((product, index) => ({
+  //   key: index + 1,
+  //   title: product.title,
+  //   brand: product.brand,
+  //   category: product.category,
+  //   color: product.color,
+  //   price: `${product.price}`,
+  //   action: (
+  //     <>
+  //       <Link to="/" className="fs-3 text-danger">
+  //         <BiEdit />
+  //       </Link>
+  //       <Link className="ms-3 fs-3 text-danger" to="/">
+  //         <AiFillDelete />
+  //       </Link>
+  //     </>
+  //   ),
+  // }));
+
+  const data1 = Array.isArray(productState?.data) // Check if the data is an array
+    ? productState.data.map((product, index) => ({
+        key: index + 1,
+        title: product.title,
+        brand: product.brand,
+        category: product.category,
+        color: product.color,
+        price: `${product.price}`,
+        action: (
+          <>
+            <Link to="/" className="fs-3 text-danger">
+              <BiEdit />
+            </Link>
+            <Link className="ms-3 fs-3 text-danger" to="/">
+              <AiFillDelete />
+            </Link>
+          </>
+        ),
+      }))
+    : []; // Fallback to an empty array if data is not available
 
   return (
     <div>

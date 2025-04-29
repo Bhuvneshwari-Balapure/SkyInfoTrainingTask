@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, isAdmin, createBrand);
 
-router.get("/get-category", getAllBrand);
+router.get("/get-brand", getAllBrand);
 
 router.get("/:id", getBrand);
 

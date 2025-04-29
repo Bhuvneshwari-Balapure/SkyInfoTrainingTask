@@ -49,10 +49,43 @@ const Blogcatlist = () => {
   }, [dispatch]);
 
   const bCatState = useSelector((state) => state.bCategory.bCategories);
+  console.log("Blog Category State from blog category list", bCatState);
+
+  // useEffect(() => {
+  //   if (bCatState && Array.isArray(bCatState) && bCatState.length > 0) {
+  //     const updatedData = bCatState.map((cat, index) => ({
+  //       key: index + 1,
+  //       name: cat.title,
+  //       action: (
+  //         <>
+  //           <Link
+  //             to={`/admin/blog-category/${cat._id}`}
+  //             className="fs-3 text-danger"
+  //           >
+  //             <BiEdit />
+  //           </Link>
+  //           <button
+  //             className="ms-3 fs-3 text-danger bg-transparent border-0"
+  //             onClick={() => showModal(cat._id)}
+  //           >
+  //             <AiFillDelete />
+  //           </button>
+  //         </>
+  //       ),
+  //     }));
+  //     setData1(updatedData);
+  //   } else {
+  //     setData1([]); // Fallback if bCategories is undefined or not an array
+  //   }
+  // }, [bCatState]); // Only run when bCatState changes
 
   useEffect(() => {
-    if (bCatState && Array.isArray(bCatState) && bCatState.length > 0) {
-      const updatedData = bCatState.map((cat, index) => ({
+    if (
+      bCatState &&
+      Array.isArray(bCatState.category) &&
+      bCatState.category.length > 0
+    ) {
+      const updatedData = bCatState.category.map((cat, index) => ({
         key: index + 1,
         name: cat.title,
         action: (
@@ -74,9 +107,9 @@ const Blogcatlist = () => {
       }));
       setData1(updatedData);
     } else {
-      setData1([]); // Fallback if bCategories is undefined or not an array
+      setData1([]);
     }
-  }, [bCatState]); // Only run when bCatState changes
+  }, [bCatState]);
 
   const deleteBlogCategory = (e) => {
     dispatch(deleteABlogCat(e));

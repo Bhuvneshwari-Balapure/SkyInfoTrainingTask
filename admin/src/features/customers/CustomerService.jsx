@@ -3,7 +3,7 @@ import axios from "axios";
 import { base_url } from "../../Config/BaseUrl";
 
 const getUsers = async () => {
-  const response = await axios.get(`${base_url}user/all-users`);
+  const response = await axios.get(`${base_url}user/getAllUser`);
 
   return response.data;
 };

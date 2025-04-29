@@ -3,8 +3,8 @@ import { config } from "../../Config/AxiosConfig";
 import { base_url } from "../../Config/BaseUrl";
 
 const getProductCategories = async () => {
-  const response = await axios.get(`${base_url}category/`);
-
+  const response = await axios.get(`${base_url}category/get-category`);
+  console.log("Product category List", response.data);
   return response.data;
 };
 const createCategory = async (category) => {

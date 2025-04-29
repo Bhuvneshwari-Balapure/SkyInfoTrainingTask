@@ -12,9 +12,9 @@ const router = express.Router();
 
 router.post("/", authMiddleware, isAdmin, createColor);
 
-router.get("/", getAllColor);
+router.get("/get-color", getAllColor);
 
-router.get("/:id", getColor);
+router.get("/get-color/:id", getColor);
 
 router.put("/:id", authMiddleware, isAdmin, updateColor);
 

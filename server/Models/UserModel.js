@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import config from "../confilg/env.config.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-
+import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema(
   {
     firstname: {
@@ -63,8 +64,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSaltSync(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
@@ -78,9 +78,21 @@ userSchema.methods.createPasswordResetToken = async function (password) {
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.passwordResetExpires = Date.now() + 30 * 60 * 1000; // 10 minutes
+  this.passwordResetExpires = Date.now() + 30 * 60 * 1000; // 10min
 
   return resetToken;
+};
+
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign({ _id: this._id }, config.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15m",
+  });
+};
+
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign({ _id: this._id }, config.REFRESH_TOKEN_SECRET, {
+    expiresIn: "15d",
+  });
 };
 
 export default mongoose.model("User", userSchema);

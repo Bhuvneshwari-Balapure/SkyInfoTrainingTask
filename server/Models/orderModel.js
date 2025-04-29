@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 var orderSchema = new mongoose.Schema(
   {
     Products: [
@@ -16,6 +15,7 @@ var orderSchema = new mongoose.Schema(
       enum: [
         "Not Processed",
         "Cash on Delivery",
+        "Cash On Delivery", // <-- Add this line if you want both spellings
         "Processing",
         "Dispatched",
         "Cancelled",

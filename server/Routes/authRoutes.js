@@ -7,13 +7,13 @@ router.post("/register", UserCtrl.createUser);
 router.post("/login", UserCtrl.loginUserCtrl);
 
 router.post("/admin-login", UserCtrl.loginAdmin);
-router.post("/cart", UserCtrl.userCart);
+router.post("/cart", authMiddleware, UserCtrl.userCart);
 router.get("/getCart", UserCtrl.getUserCart);
 router.delete("/empty-cart", authMiddleware, UserCtrl.emptyCart);
 router.post("/cart/apply-coupon", UserCtrl.applyCoupon);
 router.post("/cart/cash-order", authMiddleware, UserCtrl.createOrder);
 
-router.post("/get-orders", authMiddleware, UserCtrl.getOrders);
+router.get("/get-orders", authMiddleware, UserCtrl.getOrders);
 
 router.put(
   "/order/update-order/:id",

@@ -12,9 +12,9 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, isAdmin, createBlogCategory);
 
-router.get("/get-category", getAllBlogCategory);
+router.get("/get-blogcategory", getAllBlogCategory);
 
-router.get("/:id", getBlogCategory);
+router.get("/get-blogcategory/:id", getBlogCategory);
 
 router.put("/update/:id", authMiddleware, isAdmin, updateBlogCategory);
 
