@@ -57,6 +57,7 @@ const Addbrand = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
+      console.log("Brand data submitted:", values);
       if (getBrandId !== undefined) {
         const data = { id: getBrandId, brandData: values };
         dispatch(updateABrand(data));

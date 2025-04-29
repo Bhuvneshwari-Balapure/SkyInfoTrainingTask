@@ -14,7 +14,7 @@ import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, isAdmin, createBlog);
+router.post("/create", createBlog);
 
 router.put("/likes", authMiddleware, likeBlog);
 

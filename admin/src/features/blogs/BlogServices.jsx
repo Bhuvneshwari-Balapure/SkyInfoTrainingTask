@@ -4,12 +4,12 @@ import { base_url } from "../../Config/BaseUrl";
 
 const getBlogs = async () => {
   const response = await axios.get(`${base_url}blog/get-all-blog`);
-  console.log("Blog List", response.data);
+
   return response.data;
 };
 const createBlog = async (blog) => {
-  const response = await axios.post(`${base_url}blog/`, blog, config);
-
+  const response = await axios.post(`${base_url}blog/create`, blog, config);
+  console.log("Create Blog response", response.data);
   return response.data;
 };
 const updateBlog = async (blog) => {

@@ -3,7 +3,7 @@ import { config } from "../../Config/AxiosConfig";
 import { base_url } from "../../Config/BaseUrl";
 
 const uploadImg = async (data) => {
-  const response = await axios.post(`${base_url}upload/`, data, config);
+  const response = await axios.post(`${base_url}product/upload`, data, config);
   return response.data;
 };
 const deleteImg = async (id) => {

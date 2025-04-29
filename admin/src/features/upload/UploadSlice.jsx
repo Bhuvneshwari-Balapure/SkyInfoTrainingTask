@@ -15,7 +15,6 @@ export const uploadImg = createAsyncThunk(
     }
   }
 );
-
 export const delImg = createAsyncThunk(
   "delete/images",
   async (id, thunkAPI) => {
@@ -26,7 +25,6 @@ export const delImg = createAsyncThunk(
     }
   }
 );
-
 const initialState = {
   images: [],
   isError: false,
@@ -34,9 +32,8 @@ const initialState = {
   isSuccess: false,
   message: "",
 };
-
 export const uploadSlice = createSlice({
-  name: "images", // Fix typo "imaegs" to "images"
+  name: "imaegs",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -54,7 +51,7 @@ export const uploadSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message; // Access the message from the error object
+        state.message = action.error;
       })
       .addCase(delImg.pending, (state) => {
         state.isLoading = true;
@@ -63,15 +60,14 @@ export const uploadSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.images = []; // Update the logic if needed
+        state.images = [];
       })
       .addCase(delImg.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.payload.message || action.error.message; // Access the message from either payload or error
+        state.message = action.payload;
       });
   },
 });
-
 export default uploadSlice.reducer;

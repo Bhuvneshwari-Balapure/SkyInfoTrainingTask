@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", authMiddleware, isAdmin, createColor);
+router.post("/create", createColor);
 
 router.get("/get-color", getAllColor);
 

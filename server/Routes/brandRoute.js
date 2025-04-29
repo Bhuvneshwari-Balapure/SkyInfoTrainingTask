@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, isAdmin, createBrand);
+router.post("/create", createBrand);
 
 router.get("/get-brand", getAllBrand);
 

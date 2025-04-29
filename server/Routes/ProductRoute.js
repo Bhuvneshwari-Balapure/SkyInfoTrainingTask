@@ -2,18 +2,17 @@ import express from "express";
 import * as ProductCtrl from "../Controller/ProductCtrl.js";
 import { isAdmin, authMiddleware } from "../middlewares/authMiddleware.js";
 import { productImgResize, uploadPhoto } from "../middlewares/uploadImages.js";
-
 const router = express.Router();
 
 router.put("/wishlist", authMiddleware, ProductCtrl.addToWishList);
 router.post("/createProduct", ProductCtrl.CreateProduct);
-router.put(
+router.post(
   "/upload",
-  // authMiddleware,
-  // isAdmin,
+  authMiddleware,
+  isAdmin,
   uploadPhoto.array("images", 10),
   (req, res, next) => {
-    if (!req.files || req.files.length === 0) {
+    if (!req.files || req.files.length == 0) {
       return res.status(400).json({ message: "No files uploaded" });
     }
     next();

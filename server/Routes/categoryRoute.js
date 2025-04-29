@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, isAdmin, createCategory);
+router.post("/create", createCategory);
 
 router.get("/get-category", getAllCategory);
 

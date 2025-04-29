@@ -1,4 +1,4 @@
-import { useEffect } from "react"; // Removed the import of useState
+import { useEffect } from "react";
 import CustomInput from "../components/CustomInput";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -22,14 +22,15 @@ let schema = yup.object().shape({
   description: yup.string().required("Description is Required"),
   category: yup.string().required("Category is Required"),
 });
-
 const Addblog = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const getBlogId = location.pathname.split("/")[3];
   const imgState = useSelector((state) => state.upload.images);
+  // const bCatState = useSelector((state) => state.bCategory.bCategories);
   const bCatState = useSelector((state) => state.bCategory.bCategories);
+  console.log("Blog Category State from add Blog", bCatState);
   const blogState = useSelector((state) => state.blogs);
   const {
     isSuccess,
@@ -42,7 +43,6 @@ const Addblog = () => {
     blogImages,
     updatedBlog,
   } = blogState;
-
   useEffect(() => {
     if (getBlogId !== undefined) {
       dispatch(getABlog(getBlogId));
@@ -59,10 +59,10 @@ const Addblog = () => {
 
   useEffect(() => {
     if (isSuccess && createdBlog) {
-      toast.success("Blog Added Successfully!");
+      toast.success("Blog Added Successfullly!");
     }
     if (isSuccess && updatedBlog) {
-      toast.success("Blog Updated Successfully!");
+      toast.success("Blog Updated Successfullly!");
       navigate("/admin/blog-list");
     }
     if (isError) {
@@ -78,7 +78,6 @@ const Addblog = () => {
     });
   });
   console.log(img);
-
   useEffect(() => {
     formik.values.images = img;
   }, [blogImages]);
@@ -133,10 +132,10 @@ const Addblog = () => {
             onChange={formik.handleChange("category")}
             onBlur={formik.handleBlur("category")}
             value={formik.values.category}
-            className="form-control py-3 mt-3"
+            className="form-control py-3  mt-3"
           >
             <option value="">Select Blog Category</option>
-            {bCatState.map((i, j) => {
+            {(bCatState?.category || []).map((i, j) => {
               return (
                 <option key={j} value={i.title}>
                   {i.title}
@@ -144,6 +143,7 @@ const Addblog = () => {
               );
             })}
           </select>
+
           <div className="error">
             {formik.touched.category && formik.errors.category}
           </div>
@@ -165,7 +165,9 @@ const Addblog = () => {
                 <section>
                   <div {...getRootProps()}>
                     <input {...getInputProps()} />
-                    <p>Drag n drop some files here, or click to select files</p>
+                    <p>
+                      Drag and drop some files here, or click to select files
+                    </p>
                   </div>
                 </section>
               )}
@@ -174,7 +176,7 @@ const Addblog = () => {
           <div className="showimages d-flex flex-wrap mt-3 gap-3">
             {imgState?.map((i, j) => {
               return (
-                <div className="position-relative" key={j}>
+                <div className=" position-relative" key={j}>
                   <button
                     type="button"
                     onClick={() => dispatch(delImg(i.public_id))}

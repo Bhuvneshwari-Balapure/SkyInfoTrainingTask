@@ -13,7 +13,7 @@ router.delete("/empty-cart", authMiddleware, UserCtrl.emptyCart);
 router.post("/cart/apply-coupon", UserCtrl.applyCoupon);
 router.post("/cart/cash-order", authMiddleware, UserCtrl.createOrder);
 
-router.get("/get-orders", authMiddleware, UserCtrl.getOrders);
+router.get("/get-orders", UserCtrl.getOrders);
 
 router.put(
   "/order/update-order/:id",

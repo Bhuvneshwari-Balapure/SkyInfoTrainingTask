@@ -9,6 +9,10 @@ body {
   overflow-y: auto;
   font-family: Roboto, sans-serif;
 }
+input::placeholder {
+  color: #888 !important;
+  opacity: 1 !important;
+}
 
 .trigger {
   padding: 0 24px;
