@@ -4,6 +4,7 @@ import { base_url } from "../../Config/BaseUrl";
 
 const uploadImg = async (data) => {
   const response = await axios.post(`${base_url}product/upload`, data, config);
+  console.log("response.data from upload service ", response.data);
   return response.data;
 };
 const deleteImg = async (id) => {

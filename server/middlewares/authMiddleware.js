@@ -9,13 +9,15 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     try {
       if (token) {
         console.log(token);
-        const decoded = jwt.verify(token, "MYsecret");
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         console.log(decoded);
-        const user = await User.findById(decoded?.id);
+        const user = await User.findById(decoded?._id);
         req.user = user;
+        console.log(req.user);
         next();
       }
     } catch (error) {
+      console.log(error);
       throw new Error("Not Authorized");
     }
   } else {

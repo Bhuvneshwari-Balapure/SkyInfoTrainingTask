@@ -12,6 +12,7 @@ router.post(
   isAdmin,
   uploadPhoto.array("images", 10),
   (req, res, next) => {
+    console.log("Files uploaded:", req.files);
     if (!req.files || req.files.length == 0) {
       return res.status(400).json({ message: "No files uploaded" });
     }

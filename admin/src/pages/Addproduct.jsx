@@ -349,7 +349,6 @@
 // };
 
 // export default AddProduct;
-
 import { useEffect, useState } from "react";
 import "react-widgets/styles.css";
 import CustomInput from "../components/CustomInput";
@@ -359,15 +358,15 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { getBrands } from "../features/brand/BrandSlice";
-// import { getAProductCategory } from "../features/pcategory/pcategorySlice";
 import { getCategories } from "../features/pcategory/PcategorySlice";
 import { getColors } from "../features/color/ColoSlice";
 import { Select } from "antd";
-import { createProducts, resetState } from "../features/product/ProductSlice";
+import { resetState } from "../features/product/ProductSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { delImg, uploadImg } from "../features/upload/UploadSlice";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 let userSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -396,17 +395,14 @@ const AddProduct = () => {
 
   useEffect(() => {
     dispatch(getBrands());
-    // dispatch(getAProductCategory());
     dispatch(getCategories());
     dispatch(getColors());
   }, [dispatch]);
 
   const brandState = useSelector((state) => state.brand.brands);
-  const categoryState = useSelector(
-    (state) => state.pCategory.pCategories.category
-  ); // Adjust if necessary
+  const categoryState = useSelector((state) => state.pCategory.pCategories.category);
   const colorState = useSelector((state) => state.color.colors);
-  const imgState = useSelector((state) => state.upload.images[0]);
+  const imgState = useSelector((state) => state.upload.images);
   const newProduct = useSelector((state) => state.product);
   const { isSuccess, isError, isLoading } = newProduct;
   const createdProduct = newProduct.createProduct;
@@ -422,19 +418,15 @@ const AddProduct = () => {
 
   const handleColors = (e) => {
     setColor(e);
+    formik.setFieldValue("color", e);
   };
 
-  const colorOptions = Array.isArray(colorState.color)
+  const colorOptions = Array.isArray(colorState?.color)
     ? colorState.color.map((item) => ({
         label: item.title,
         value: item._id,
       }))
     : [];
-
-  useEffect(() => {
-    formik.values.color = color || [];
-    formik.setFieldValue("images", imgState);
-  }, [color, imgState]);
 
   const formik = useFormik({
     initialValues: {
@@ -449,18 +441,35 @@ const AddProduct = () => {
       images: [],
     },
     validationSchema: userSchema,
-
-    onSubmit: (values) => {
-      console.log("Submitting Product:", values);
-      dispatch(createProducts({ ...values, images: imgState }));
-      setTimeout(() => {
-        dispatch(resetState());
-        navigate("/admin/list-product");
-        formik.resetForm();
-        setColor([]);
-      }, 3000);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const payload = { ...values, images: imgState };
+        const response = await axios.post(
+          "http://localhost:8080/api/product/createProduct",
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        toast.success("Product successfully added");
+        setTimeout(() => {
+          dispatch(resetState());
+          navigate("/admin/list-product");
+          resetForm();
+          setColor([]);
+        }, 3000);
+      } catch (error) {
+        console.error("Error creating product:", error);
+        toast.error(error.response?.data?.message || "Failed to create product");
+      }
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue("images", imgState || []);
+  }, [imgState]);
 
   return (
     <div>
@@ -474,21 +483,14 @@ const AddProduct = () => {
           onBlr={formik.handleBlur("title")}
           val={formik.values.title}
         />
-        <div className="error">
-          {formik.touched.title && formik.errors.title}
-        </div>
+        <div className="error">{formik.touched.title && formik.errors.title}</div>
 
-        <div className="">
-          <ReactQuill
-            theme="snow"
-            name="description"
-            onChange={formik.handleChange("description")}
-            value={formik.values.description}
-          />
-        </div>
-        <div className="error">
-          {formik.touched.description && formik.errors.description}
-        </div>
+        <ReactQuill
+          theme="snow"
+          value={formik.values.description}
+          onChange={(value) => formik.setFieldValue("description", value)}
+        />
+        <div className="error">{formik.touched.description && formik.errors.description}</div>
 
         <CustomInput
           type="number"
@@ -496,20 +498,18 @@ const AddProduct = () => {
           name="price"
           onChng={formik.handleChange("price")}
           onBlr={formik.handleBlur("price")}
-          val={formik.values.price.toString()}
+          val={formik.values.price}
         />
-        <div className="error">
-          {formik.touched.price && formik.errors.price}
-        </div>
+        <div className="error">{formik.touched.price && formik.errors.price}</div>
 
         <select
-          className="w-full py-3 text-xl outline-none border rounded-xl px-5 mt-5 pe-5"
+          className="w-full py-3 text-xl outline-none border rounded-xl px-5 mt-5"
           name="brand"
           onChange={formik.handleChange("brand")}
           value={formik.values.brand}
         >
           <option value="">Select a brand</option>
-          {Array.isArray(brandState.brand) && brandState.brand.length > 0 ? (
+          {Array.isArray(brandState.brand) ? (
             brandState.brand.map((item, j) => (
               <option key={j} value={item.title}>
                 {item.title}
@@ -519,46 +519,44 @@ const AddProduct = () => {
             <option disabled>Loading Brands...</option>
           )}
         </select>
-
-        <div className="text-red-500 mt-2">
-          {formik.touched.brand && formik.errors.brand}
-        </div>
+        <div className="error">{formik.touched.brand && formik.errors.brand}</div>
 
         <select
-          className="w-full py-3 text-xl outline-none border rounded-xl px-5 mt-5 pe-5"
+          className="w-full py-3 text-xl outline-none border rounded-xl px-5 mt-5"
           name="category"
           onChange={formik.handleChange("category")}
           value={formik.values.category}
         >
           <option value="">Select a Category</option>
-          {Array.isArray(categoryState) && categoryState.length > 0 ? (
+          {Array.isArray(categoryState) &&
             categoryState.map((item, j) => (
               <option key={j} value={item._id}>
                 {item.title}
               </option>
-            ))
-          ) : (
-            <option disabled>Loading Categories...</option>
-          )}
+            ))}
         </select>
+        <div className="error">{formik.touched.category && formik.errors.category}</div>
 
-        <div className="text-red-500 mt-2">
-          {formik.touched.category && formik.errors.category}
-        </div>
+        <CustomInput
+          type="text"
+          label="Enter Product Tags"
+          name="tags"
+          onChng={formik.handleChange("tags")}
+          onBlr={formik.handleBlur("tags")}
+          val={formik.values.tags}
+        />
+        <div className="error">{formik.touched.tags && formik.errors.tags}</div>
 
         <Select
           mode="multiple"
           allowClear
-          className="w-100"
+          className="w-full my-5"
           placeholder="Select colors"
           value={color}
           onChange={handleColors}
           options={colorOptions}
         />
-
-        <div className="error">
-          {formik.touched.color && formik.errors.color}
-        </div>
+        <div className="error">{formik.touched.color && formik.errors.color}</div>
 
         <CustomInput
           type="number"
@@ -566,40 +564,33 @@ const AddProduct = () => {
           name="quantity"
           onChng={formik.handleChange("quantity")}
           onBlr={formik.handleBlur("quantity")}
-          val={formik.values.quantity.toString()}
+          val={formik.values.quantity}
         />
-        <div className="error">
-          {formik.touched.quantity && formik.errors.quantity}
+        <div className="error">{formik.touched.quantity && formik.errors.quantity}</div>
+
+        <p className="mt-5">Upload Images</p>
+        <div className="bg-white border p-5 text-center cursor-pointer" {...getRootProps()}>
+          <input {...getInputProps()} />
+          <p>Drag and drop files here, or click to upload</p>
         </div>
 
-        <p>Upload Images</p>
-        <div className="bg-white border-1 p-5 text-center">
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            <p>Drag and drop some files here, or click to select files</p>
-          </div>
-        </div>
-
-        {/* Display uploaded images */}
-        <div className="showimages d-flex flex-wrap gap-3">
-          {imgState?.map((i, j) => {
-            return (
-              <div className="position-relative" key={j}>
-                <button
-                  type="button"
-                  onClick={() => dispatch(delImg(i.public_id))} // Delete image by public_id
-                  className="btn-close position-absolute"
-                  style={{ top: "10px", right: "10px" }}
-                ></button>
-                <img src={i.url} alt="" width={200} height={200} />
-              </div>
-            );
-          })}
+        <div className="showimages d-flex flex-wrap gap-3 mt-3">
+          {imgState?.map((i, j) => (
+            <div className="position-relative" key={j}>
+              <button
+                type="button"
+                onClick={() => dispatch(delImg(i.public_id))}
+                className="btn-close position-absolute"
+                style={{ top: "10px", right: "10px" }}
+              ></button>
+              <img src={i.url} alt="" width={200} height={200} />
+            </div>
+          ))}
         </div>
 
         <button
-          className="border rounded-xl my-5 px-4 py-2 bg-green-400"
           type="submit"
+          className="border rounded-xl my-5 px-4 py-2 bg-green-400"
         >
           Add Product
         </button>

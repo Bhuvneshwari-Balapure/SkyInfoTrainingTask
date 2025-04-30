@@ -5,8 +5,10 @@ export const uploadImg = createAsyncThunk(
   "upload/images",
   async (data, thunkAPI) => {
     try {
+      console.log("Files uploaded:", data);
       const formData = new FormData();
       for (let i = 0; i < data.length; i++) {
+        console.log(data[i]);
         formData.append("images", data[i]);
       }
       return await UploadService.uploadImg(formData);
@@ -33,7 +35,7 @@ const initialState = {
   message: "",
 };
 export const uploadSlice = createSlice({
-  name: "imaegs",
+  name: "images",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -42,10 +44,11 @@ export const uploadSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(uploadImg.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.images = action.payload;
+        state.images = action.payload.images;
       })
       .addCase(uploadImg.rejected, (state, action) => {
         state.isLoading = false;
@@ -54,19 +57,24 @@ export const uploadSlice = createSlice({
         state.message = action.error;
       })
       .addCase(delImg.pending, (state) => {
+
         state.isLoading = true;
       })
-      .addCase(delImg.fulfilled, (state) => {
+      .addCase(delImg.fulfilled, (state, action) => {
+        console.log(action.payload) ;
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
         state.images = [];
       })
       .addCase(delImg.rejected, (state, action) => {
+        console.log(action.payload);
+
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
+        console.log(action.payload);
       });
   },
 });
